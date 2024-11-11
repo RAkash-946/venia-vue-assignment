@@ -8,12 +8,14 @@
         </div>
       </div>
     </div>
+    <Pagination/>
   </main>
 </template>
 <script setup>
 import { useStore } from 'vuex';
 import Card from '../components/Card.vue';
 import { computed } from 'vue';
+import Pagination from '@/components/Pagination.vue';
 const store = useStore();
 const filteredProducts = computed(() => store.getters.filteredPageProducts);
 </script>

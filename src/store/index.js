@@ -45,6 +45,9 @@ const store = createStore({
         setAllBrands(state, brands) {
             state.allBrands = brands;
         },
+        setPage(state, page) {
+            state.page = page;
+          },
     },
     actions: {
         fetchData({ commit }) {
@@ -61,12 +64,18 @@ const store = createStore({
                 })
                 .catch((error) => console.error("Error fetching data:", error));
         },
+        setPage({ commit }, page) {
+            commit("setPage", page);
+          },
     },
     getters: {
             filteredPageProducts: (state) => {
               const start = state.page * 30;
               const end = start + 30;
               return state.filteredProducts.slice(start, end);
+            },
+            totalPages: (state) => {
+                return Math.ceil(state.filteredProducts.length / 30);
             },
     }
 });
