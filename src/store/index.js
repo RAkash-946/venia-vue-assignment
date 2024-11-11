@@ -73,6 +73,36 @@ const store = createStore({
             state.filter = { ...state.oldFilter };
             state.page = 0;
         },
+        addToCart(state, product) {
+            const cartItem = state.cart.find((item) => item.id === product.id);
+            if (cartItem) {
+                cartItem.quantity += 1;
+            } else {
+                state.cart.push({ ...product, quantity: 1 });
+            }
+        },
+        removeFromCart(state, productId) {
+            state.cart = state.cart.filter((item) => item.id !== productId);
+        },
+        clearCart(state) {
+            state.cart = [];
+        },
+        incrementQuantity(state, productId) {
+            const cartItem = state.cart.find((item) => item.id === productId);
+            if (cartItem) {
+                cartItem.quantity += 1;
+            }
+        },
+        decrementQuantity(state, productId) {
+            const cartItem = state.cart.find((item) => item.id === productId);
+            if (cartItem) {
+                if (cartItem.quantity > 1) {
+                    cartItem.quantity -= 1;
+                } else {
+                    state.cart = state.cart.filter((item) => item.id !== productId);
+                }
+            }
+        },
     },
     actions: {
         fetchData({ commit }) {
@@ -116,9 +146,54 @@ const store = createStore({
         setSearchQuery({ commit, dispatch }, query) {
             commit("setQuery", query);
             dispatch("fetchQuery");
-          },
+        },
         setPage({ commit }, page) {
             commit("setPage", page);
+        },
+        addToCart(state, product) {
+            const cartItem = state.cart.find((item) => item.id === product.id);
+            if (cartItem) {
+                cartItem.quantity += 1;
+            } else {
+                state.cart.push({ ...product, quantity: 1 });
+            }
+        },
+        removeFromCart(state, productId) {
+            state.cart = state.cart.filter((item) => item.id !== productId);
+        },
+        clearCart(state) {
+            state.cart = [];
+        },
+        incrementQuantity(state, productId) {
+            const cartItem = state.cart.find((item) => item.id === productId);
+            if (cartItem) {
+                cartItem.quantity += 1;
+            }
+        },
+        decrementQuantity(state, productId) {
+            const cartItem = state.cart.find((item) => item.id === productId);
+            if (cartItem) {
+                if (cartItem.quantity > 1) {
+                    cartItem.quantity -= 1;
+                } else {
+                    state.cart = state.cart.filter((item) => item.id !== productId);
+                }
+            }
+        },
+        addProductToCart({ commit }, product) {
+            commit("addToCart", product);
+        },
+        removeProductFromCart({ commit }, productId) {
+            commit("removeFromCart", productId);
+        },
+        clearCart({ commit }) {
+            commit("clearCart");
+        },
+        incrementProductQuantity({ commit }, productId) {
+            commit("incrementQuantity", productId);
+        },
+        decrementProductQuantity({ commit }, productId) {
+            commit("decrementQuantity", productId);
         },
     },
     getters: {
@@ -136,6 +211,19 @@ const store = createStore({
         allBrands: (state) => {
             return state.allBrands;
         },
+        cartTotal: (state) => {
+            const total = state.cart.reduce((acc, product) => {
+                return acc + (product.price * product.quantity);
+            }, 0);
+
+            return total.toFixed(2);
+        },
+        totalItems: (state) => {
+            const total = state.cart.reduce((acc, product) => {
+                return acc + product.quantity
+            }, 0);
+            return total;
+        }
     }
 });
 export default store;

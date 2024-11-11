@@ -1,16 +1,3 @@
-<script setup>
-import { ref } from 'vue';
-
-const navItems = ref([
-  { name: 'Tops', dropdown: true },
-  { name: 'Bottoms', dropdown: true },
-  { name: 'Dresses', dropdown: false },
-  { name: 'Accessories', dropdown: true },
-  { name: 'Shop The Look', dropdown: true },
-  { name: 'New Products', dropdown: false }
-]);
-</script>
-
 <template>
   <header>
     <div class="wrapper">
@@ -40,6 +27,8 @@ const navItems = ref([
                 </ul>
               </li>
             </ul>
+
+            <!-- Icons in Navbar -->
             <div class="d-flex align-items-center nav-icons ms-auto ">
               <a href="#" class="me-3">
                 <i class="fas fa-search" style="color: #000;"></i> Search
@@ -56,8 +45,40 @@ const navItems = ref([
         </div>
       </nav>
     </div>
+
+    <teleport v-if="cartVisible" to="#model">
+      <CartModel @close="cartVisible = false" />
+    </teleport>
   </header>
 </template>
+<script setup>
+import { computed, ref, watch } from 'vue';
+import CartModel from './CartModel.vue';
+import { useStore } from 'vuex';
+const store = useStore();
+const total = computed(()=>store.getters.totalItems)
+
+const cartVisible = ref(false);
+function onClick() {
+  cartVisible.value = !cartVisible.value;
+}
+
+watch(cartVisible, (newVal) => {
+  if (newVal) {
+    document.body.classList.add('no-scroll');
+  } else {
+    document.body.classList.remove('no-scroll');
+}});
+
+const navItems = ref([
+  { name: 'Tops', dropdown: true },
+  { name: 'Bottoms', dropdown: true },
+  { name: 'Dresses', dropdown: false },
+  { name: 'Accessories', dropdown: true },
+  { name: 'Shop The Look', dropdown: true },
+  { name: 'New Products', dropdown: false }
+]);
+</script>
 <style scoped>
 nav ul {
     margin-top: 15px;

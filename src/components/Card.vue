@@ -5,7 +5,7 @@
         <h5 class="card-title">{{ product.title }}</h5>
         <p class="card-text">${{ product.price }}</p>
         <div class="card-btn d-flex justify-content-between">
-          <button class="btn btn-primary add-to-cart">Add to Cart</button>
+          <button @click="addToCart" class="btn btn-primary add-to-cart">Add to Cart</button>
           <i class="fa-regular fa-heart"></i>
         </div>
       </div>
@@ -14,12 +14,20 @@
   
   <script setup>
   import { defineProps } from 'vue';
+  import { useStore } from 'vuex';
+
   const props = defineProps({
     product: {
       type: Object,
       required: true
     }
   });
+
+  const store = useStore();
+
+  function addToCart() {
+    store.dispatch('addProductToCart', props.product);
+  }
   </script>
   
   <style scoped>
