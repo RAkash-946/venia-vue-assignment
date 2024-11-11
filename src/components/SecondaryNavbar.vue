@@ -1,3 +1,19 @@
+<script setup>
+import { ref } from "vue";
+import { useStore } from "vuex"; // Import useStore properly from Vuex
+import Filter from "./Filter.vue";
+
+const store = useStore();
+const searchTerm = ref("");
+const filterVisible = ref(false);
+function onClick() {
+  filterVisible.value = !filterVisible.value;
+}
+function onSearch() {
+  store.dispatch('setSearchQuery', searchTerm.value);
+}
+</script>
+
 <template>
   <div class="search-container d-flex">
     <form class="d-flex w-100" role="search" @submit.prevent="onSearch">
@@ -8,19 +24,19 @@
         aria-label="Search"
         v-model="searchTerm"
       />
-      <button type="button" class="btn search-btn">
+      <button type="button" class="btn search-btn" @click="onSearch">
         <i class="fa-solid fa-magnifying-glass" style="color: #ffffff"></i>
         <span class="btn-label">Search again</span>
-      </button>;
+      </button>
     </form>
-    <button class="btn filter-btn" type="button">
+    <button class="btn filter-btn" type="button" @click="onClick">
       <i class="fa-solid fa-filter" style="color: #ffffff"></i>
       <span class="btn-label">Filter</span>
     </button>
   </div>
+  <Filter v-if="filterVisible" @close="filterVisible=false"/>
 </template>
-<script setup>
-</script>
+
 <style scoped>
 .search-container {
   width: 90%;
