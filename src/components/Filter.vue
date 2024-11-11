@@ -22,7 +22,7 @@
                             <input class="form-check-input" type="checkbox" v-model="filter.category" :value="category"
                                 :id="'category-' + category">
                             <label class="form-check-label" :for="'category-' + category">
-                                {{ category }}
+                                {{ category.split('-').map(value => value[0].toUpperCase() + value.slice(1)).join(" ") }}
                             </label>
                         </div>
                     </div>
